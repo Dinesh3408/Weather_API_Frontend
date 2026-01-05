@@ -292,4 +292,78 @@
     .weather-details {
       grid-template-columns: repeat(2, 1fr);
     }
+    /* Location button and status styles */
+.location-button {
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.location-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(67, 233, 123, 0.3);
+}
+
+.location-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.location-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.location-status {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-left: 4px solid #2196f3;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spinner-small {
+  animation: spin 1s linear infinite;
+}
+
+/* Ensure search form wraps nicely on mobile */
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: column;
+  }
+  
+  .search-input,
+  .search-button,
+  .location-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
   }
