@@ -84,7 +84,7 @@ function App() {
 
     try {
       console.log('Fetching weather for city:', cityName);
-      const response = await axios.get(`${API_BASE_URL}/${cityName}`);
+      const response = await axios.get(`${API_BASE_URL}/api/weather/${encodeURIComponent(cityName)}`);
       console.log('Response:', response.data);
       setWeather(response.data);
     } catch (err) {
