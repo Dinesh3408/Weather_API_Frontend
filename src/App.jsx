@@ -106,7 +106,7 @@ function App() {
       console.log('Fetching weather by coordinates:', lat, lon);
       
       // Call YOUR existing backend endpoint
-      const response = await axios.get(`${API_BASE_URL}/coordinates`, {
+      const response = await axios.get(`${API_BASE_URL}/api/weather/coordinates`, {
         params: {
           lat: lat,
           lon: lon
