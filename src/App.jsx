@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Cloud, Wind, Droplets, Gauge, Search, Loader, MapPin } from 'lucide-react';
 import './App.css';
 
-const API_BASE_URL = 'http://localhost:8080/api/weather';
+//const API_BASE_URL = 'http://localhost:8080/api/weather';
+const API_BASE_URL ='https://vathavaranam.onrender.com'
 
 function App() {
   const [city, setCity] = useState('');
