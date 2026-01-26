@@ -86,7 +86,24 @@ export const useWeather = () => {
             setWeather(weatherData);
         } catch (err) {
             console.error('Error fetching weather:', err);
-            setError(`Could not fetch weather for "${city}". Please try again.`);
+            let message = `Could not fetch weather for "${city}".`;
+
+            if (err.response) {
+                // The server responded with a status code that falls out of the range of 2xx
+                const backendData = err.response.data;
+                if (typeof backendData === 'string' && backendData.length > 0) {
+                    message = backendData;
+                } else if (backendData && typeof backendData === 'object' && backendData.message) {
+                    message = backendData.message;
+                } else if (backendData && typeof backendData === 'object' && backendData.error) {
+                    message = backendData.error;
+                }
+            } else if (err.request) {
+                // The request was made but no response was received
+                message = "The backend server is not responding. Please ensure your local backend is running on port 8080.";
+            }
+
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -124,10 +141,9 @@ export const useWeather = () => {
             setWeather(weatherData);
         } catch (err) {
             console.error('Error fetching weather by coordinates:', err);
-            setError('Could not fetch weather for your location. Showing default city.');
-            // Fallback to default city if needed, but the hook should ideally just report error
-            // The component can decide whether to fallback or not.
-            // For now, let's keep the error state.
+            const backendError = err.response?.data;
+            const message = typeof backendError === 'string' ? backendError : 'Could not fetch weather for your location.';
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -213,7 +229,9 @@ export const useWeather = () => {
                 setWeather(weatherData);
             } catch (fallbackErr) {
                 console.error('Fallback to Mumbai also failed:', fallbackErr);
-                setError('Could not load weather data. Please try searching for a city.');
+                const backendError = fallbackErr.response?.data;
+                const message = typeof backendError === 'string' ? backendError : 'Could not load weather data. Please try searching for a city.';
+                setError(message);
             }
         } finally {
             setLoading(false);
