@@ -149,6 +149,37 @@ body {
   transform: translateY(-2px);
 }
 
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.8em;
+  }
+
+  .stats-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .stat-item {
+    font-size: 0.8em;
+  }
+
+  .search-card {
+    padding: 20px;
+  }
+
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-button,
+  .location-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
 .search-button:hover {
   box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
 }
@@ -689,4 +720,75 @@ body {
 
 .min-temp {
   color: #70757a;
+}
+
+/* Mobile Responsiveness for Google Weather Card */
+@media (max-width: 768px) {
+  .google-weather-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .main-weather-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .weather-meta {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    text-align: left;
+    width: 100%;
+    border-top: 1px solid #f1f3f4;
+    padding-top: 16px;
+  }
+
+  .weather-status-right {
+    text-align: center;
+    width: 100%;
+    border-top: 1px solid #f1f3f4;
+    padding-top: 16px;
+  }
+
+  .current-temp {
+    font-size: 56px;
+  }
+
+  .weather-tabs {
+    gap: 12px;
+    justify-content: space-between;
+  }
+
+  .tab-btn {
+    padding: 8px 2px;
+    font-size: 13px;
+  }
+
+  .daily-item {
+    min-width: 50px;
+  }
+
+  .weather-graph-container {
+    padding-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .weather-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .current-temp {
+    font-size: 48px;
+  }
+
+  .status-title {
+    font-size: 20px;
+  }
 }
