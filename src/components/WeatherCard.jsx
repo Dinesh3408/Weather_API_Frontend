@@ -48,11 +48,11 @@ const WeatherCard = ({ weather }) => {
 
                 <div className="weather-meta">
                     <p className="precip-text">
-                        Precipitation: {weather.rainVolume > 0 ? `Rain ${weather.rainVolume}mm` : weather.snowVolume > 0 ? `Snow ${weather.snowVolume}mm` : '0mm'}
+                        Precipitation: {weather.precipitation !== undefined ? `${weather.precipitation}%` : (weather.hourly?.[0]?.precipitation !== undefined ? `${weather.hourly[0].precipitation}%` : '0%')}
                     </p>
                     <p className="humidity-text">Humidity: {weather.humidity}%</p>
                     <p className="wind-text">
-                        Wind: {weather.windSpeed} km/h {weather.windDirection ? `(${getWindDirection(weather.windDirection)})` : ''}
+                        Wind: {weather.windSpeed} km/h {weather.windDirection !== undefined ? `(${getWindDirection(weather.windDirection)})` : (weather.windDeg !== undefined ? `(${getWindDirection(weather.windDeg)})` : (weather.hourly?.[0]?.windDeg !== undefined ? `(${getWindDirection(weather.hourly[0].windDeg)})` : ''))}
                         {weather.windGust > 0 ? `, Gust: ${weather.windGust} km/h` : ''}
                     </p>
                 </div>

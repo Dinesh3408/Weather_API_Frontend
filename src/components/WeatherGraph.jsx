@@ -1,4 +1,8 @@
-import React from 'react';
+const getWindDirection = (degrees) => {
+    const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    const index = Math.round(degrees / 22.5) % 16;
+    return directions[index];
+};
 
 const WeatherGraph = ({ hourly, activeTab = 'Temperature' }) => {
     if (!hourly || hourly.length === 0) return null;
@@ -9,7 +13,7 @@ const WeatherGraph = ({ hourly, activeTab = 'Temperature' }) => {
     const padding = 20;
 
     // Determine what data to display based on activeTab
-    let values, minValue, maxValue, unit, color, label;
+    let values, minValue, maxValue, unit, color;
 
     if (activeTab === 'Temperature') {
         values = hourly.map(d => d.temp);
@@ -17,25 +21,19 @@ const WeatherGraph = ({ hourly, activeTab = 'Temperature' }) => {
         maxValue = Math.max(...values);
         unit = '°';
         color = '#FDB813';
-        label = 'temp';
     } else if (activeTab === 'Precipitation') {
         values = hourly.map(d => Number(d.precipitation) || 0);
         minValue = 0;
-        const dataMax = Math.max(...values);
-        maxValue = dataMax > 0 ? dataMax : 5; // Use 5mm as default max if all zeros
-        unit = 'mm';
+        maxValue = 100; // Percentage max
+        unit = '%';
         color = '#4A90E2';
-        label = 'precipitation';
-        console.log('Precipitation values:', values, 'max:', maxValue);
     } else if (activeTab === 'Wind') {
         values = hourly.map(d => Number(d.windSpeed) || 0);
         minValue = 0;
         const dataMax = Math.max(...values);
-        maxValue = dataMax > 0 ? dataMax : 10; // Use 10 km/h as default max if all zeros
+        maxValue = dataMax > 0 ? dataMax + 5 : 10;
         unit = ' km/h';
         color = '#50C878';
-        label = 'windSpeed';
-        console.log('Wind values:', values, 'max:', maxValue);
     }
 
     // Scale helpers
@@ -66,9 +64,11 @@ const WeatherGraph = ({ hourly, activeTab = 'Temperature' }) => {
 
                 {/* Points and Labels */}
                 {hourly.map((d, i) => {
-                    const value = activeTab === 'Temperature' ? d.temp :
-                        activeTab === 'Precipitation' ? (d.precipitation || 0) :
-                            (d.windSpeed || 0);
+                    const value = values[i];
+                    let label = activeTab === 'Temperature' ? `${Math.round(value)}${unit}` :
+                        activeTab === 'Precipitation' ? `${value}${unit}` :
+                            `${value}${unit} (${getWindDirection(d.windDeg)})`;
+
                     return (
                         <g key={i}>
                             {/* Value Label */}
@@ -76,10 +76,11 @@ const WeatherGraph = ({ hourly, activeTab = 'Temperature' }) => {
                                 x={getX(i)}
                                 y={getY(value) - 10}
                                 textAnchor="middle"
-                                fontSize="12"
+                                fontSize="11"
+                                fontWeight="500"
                                 fill="#333"
                             >
-                                {activeTab === 'Temperature' ? Math.round(value) : value.toFixed(1)}{unit}
+                                {label}
                             </text>
 
                             {/* Time Label */}
