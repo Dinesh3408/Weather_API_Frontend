@@ -11,23 +11,24 @@ import { useLocation } from './hooks/useLocation';
 import { useAnalytics } from './hooks/useAnalytics';
 
 function App() {
-  const { weather, loading, error, fetchWeather, fetchWeatherByCoordinates, setError } = useWeather();
+  const { weather, loading, error, fetchWeather, fetchWeatherByCoordinates, fetchWeatherByAutoIP, setError } = useWeather();
   const { detectingLocation, locationError, getUserLocation } = useLocation();
   const stats = useAnalytics();
 
   const popularCities = ['Mumbai', 'Delhi', 'Bangalore', 'London', 'New York', 'Tokyo'];
 
   useEffect(() => {
-    // Attempt to get location on mount
-    handleLocationRequest();
+    // Auto-detect location using IP on mount (no permission needed)
+    fetchWeatherByAutoIP();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLocationRequest = () => {
+    // Use GPS location when user explicitly clicks "My Location" button
     getUserLocation(
       (lat, lon) => fetchWeatherByCoordinates(lat, lon),
       (errMsg) => {
-        // Fallback to default city if location fails on initial load or manual request
+        // Fallback to default city if GPS location fails
         setError(errMsg);
         fetchWeather('Mumbai');
       }

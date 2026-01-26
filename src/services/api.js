@@ -13,6 +13,8 @@ const api = axios.create({
 export const weatherService = {
     getWeatherByCity: (city) => api.get(`/api/weather/${encodeURIComponent(city)}`),
     getWeatherByCoordinates: (lat, lon) => api.get('/api/weather/coordinates', { params: { lat, lon } }),
+    getWeatherByAutoIP: () => api.get('/api/weather/auto'),
+    getForecastByCity: (city) => api.get(`/api/weather/forecast/${encodeURIComponent(city)}`),
 };
 
 export const analyticsService = {
