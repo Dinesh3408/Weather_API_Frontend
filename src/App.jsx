@@ -47,6 +47,7 @@ function App() {
             onSearch={fetchWeather}
             onLocationRequest={handleLocationRequest}
             isDetectingLocation={detectingLocation}
+            discoveredCity={weather?.city}
           />
 
           <CityList
@@ -59,7 +60,7 @@ function App() {
 
         {loading && <LoadingSpinner />}
 
-        {!loading && weather && <WeatherCard weather={weather} />}
+        {!loading && weather && <WeatherCard weather={weather} onUpdate={fetchWeather} />}
       </div>
     </div>
   );

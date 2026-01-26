@@ -9,10 +9,28 @@ const getWindDirection = (degrees) => {
     return directions[index];
 };
 
-const WeatherCard = ({ weather }) => {
+const WeatherCard = ({ weather, onUpdate }) => {
     const [activeTab, setActiveTab] = useState('Temperature');
+    const [unit, setUnit] = useState('C'); // 'C' or 'F'
 
     if (!weather) return null;
+
+    const toFahrenheit = (c) => Math.round((c * 9 / 5) + 32);
+
+    const displayTemp = (c) => unit === 'C' ? Math.round(c) : toFahrenheit(c);
+
+    // Transform hourly data for the graph based on unit
+    const transformedHourly = weather.hourly?.map(h => ({
+        ...h,
+        temp: unit === 'C' ? h.temp : toFahrenheit(h.temp)
+    }));
+
+    // Transform daily data
+    const transformedDaily = weather.daily?.map(d => ({
+        ...d,
+        min: unit === 'C' ? d.min : toFahrenheit(d.min),
+        max: unit === 'C' ? d.max : toFahrenheit(d.max)
+    }));
 
     return (
         <div className="google-weather-card">
@@ -23,7 +41,7 @@ const WeatherCard = ({ weather }) => {
                     <span>Results for <strong>{weather.city}, {weather.country}</strong></span>
                 </div>
                 <div className="header-actions">
-                    <button className="update-btn">
+                    <button className="update-btn" onClick={() => onUpdate(weather.city)}>
                         Update <RefreshCw size={14} className="ml-1" />
                     </button>
                     <button className="menu-btn">
@@ -38,11 +56,21 @@ const WeatherCard = ({ weather }) => {
                     <div className="weather-icon-large">
                         <img src={`https://openweathermap.org/img/wn/02d@2x.png`} alt="weather" />
                     </div>
-                    <span className="current-temp">{Math.round(weather.temperature)}</span>
+                    <span className="current-temp">{displayTemp(weather.temperature)}</span>
                     <div className="unit-group">
-                        <span className="unit active">°C</span>
+                        <span
+                            className={`unit ${unit === 'C' ? 'active' : ''}`}
+                            onClick={() => setUnit('C')}
+                        >
+                            °C
+                        </span>
                         <span className="separator">|</span>
-                        <span className="unit">°F</span>
+                        <span
+                            className={`unit ${unit === 'F' ? 'active' : ''}`}
+                            onClick={() => setUnit('F')}
+                        >
+                            °F
+                        </span>
                     </div>
                 </div>
 
@@ -79,12 +107,12 @@ const WeatherCard = ({ weather }) => {
 
             {/* Graph Area */}
             <div className="graph-area">
-                <WeatherGraph hourly={weather.hourly} activeTab={activeTab} />
+                <WeatherGraph hourly={transformedHourly} activeTab={activeTab} />
             </div>
 
             {/* Daily Forecast */}
             <div className="forecast-area">
-                <DailyForecast daily={weather.daily} />
+                <DailyForecast daily={transformedDaily} />
             </div>
         </div>
     );
